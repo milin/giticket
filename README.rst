@@ -30,12 +30,15 @@ It integrates with [pre-commit](https://pre-commit.com/)
 
 The following is a sample commit.
 
+::
 
     repos:
-    - repo: https://github.com/milin/giticket
+    - repo:  https://github.com/milin/giticket
       rev: 'master'
       hooks:
-      - id: giticket
+      - id:  giticket
+        args: ['--regex=SPROD-[0-9]'] . # Optional 
+       
 
 
 
