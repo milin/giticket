@@ -36,9 +36,7 @@ For e.g. if you name your branch ``JIRA-1234_awesome_feature`` and commit ``Fix 
 Pass ``--regex=`` or update ``args: [--regex=<custom regex>]`` in your .yaml file if you have custom ticket regex. 
 By default its ``[A-Z]+-\d+``.
 
-It is best used along with pre-commit_.
-
-The following is a sample commit.
+It is best used along with pre-commit_. You can use it along with pre-commit by using the following hook.
 
 ::
 
