@@ -5,12 +5,12 @@ import mock
 import pytest
 import six
 
-from pre_commit_hooks.prepend_ticket_number_to_commit_msg import get_branch_name
-from pre_commit_hooks.prepend_ticket_number_to_commit_msg import main
-from pre_commit_hooks.prepend_ticket_number_to_commit_msg import update_commit_message
+from giticket.giticket import get_branch_name
+from giticket.giticket import main
+from giticket.giticket import update_commit_message
 
 
-TESTING_MODULE = 'pre_commit_hooks.prepend_ticket_number_to_commit_msg'
+TESTING_MODULE = 'giticket.giticket'
 
 
 @pytest.mark.parametrize(
