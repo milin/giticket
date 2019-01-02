@@ -26,7 +26,18 @@ Auto add ticket info to your git commits.
 Features
 --------
 
-* TODO
+It integrates with [pre-commit](https://pre-commit.com/)
+
+The following is a sample commit.
+
+```
+    repos:
+    - repo: https://github.com/milin/giticket
+      rev: 'master'
+      hooks:
+      - id: giticket
+```
+
 
 Credits
 -------
