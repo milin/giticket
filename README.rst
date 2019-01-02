@@ -6,7 +6,7 @@ giticket
 .. image:: https://img.shields.io/pypi/v/giticket.svg
         :target: https://pypi.python.org/pypi/giticket
 
-.. image:: https://img.shields.io/travis/milin/giticket.svg
+.. image:: https://travis-ci.com/milin/giticket.svg?branch=master
         :target: https://travis-ci.org/milin/giticket
 
 .. image:: https://readthedocs.org/projects/giticket/badge/?version=latest
