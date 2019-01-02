@@ -47,7 +47,7 @@ The following is a sample commit.
       rev: 'master'
       hooks:
       - id:  giticket
-        args: ['--regex=SPROD-[0-9]']  # Optional 
+        args: ['--regex=PROJ-[0-9]']  # Optional 
 
 
 .. _pre-commit: https://pre-commit.com/
