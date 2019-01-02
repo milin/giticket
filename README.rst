@@ -26,23 +26,27 @@ Auto add ticket info to your git commits.
 Features
 --------
 
-It integrates with [pre-commit](https://pre-commit.com/)
+This hook saves developers time by prepending ticket numbers to commit-msgs.
+For this to work the following two conditions must be met:
+   - The ticket format regex specified must match, if the regex is passed in.
+   - The branch name format must be <ticket number>_<rest of the branch name>
 
-The following is a sample commit.
+For e.g. if you name your branch ``JIRA-1234_awesome_feature`` and commit ``Fix some bug``, the commit will be updated to ``JIRA-1234 Fix some bug``.
 
-```
+Pass ``--regex=`` or update ``args: [--regex=<custom regex>]`` in your .yaml file if you have custom ticket regex.
+By default its ``[A-Z]+-\d+``.
+
+
+It is best used along with pre-commit_. You can use it along with pre-commit by using the following hook.
+
+::
+
     repos:
-    - repo: https://github.com/milin/giticket
+    - repo:  https://github.com/milin/giticket
       rev: 'master'
       hooks:
-      - id: giticket
-```
+      - id:  giticket
+        args: ['--regex=PROJ-[0-9]']  # Optional
 
 
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _pre-commit: https://pre-commit.com/
