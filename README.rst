@@ -37,7 +37,7 @@ The following is a sample commit.
       rev: 'master'
       hooks:
       - id:  giticket
-        args: ['--regex=SPROD-[0-9]'] . # Optional 
+        args: ['--regex=SPROD-[0-9]']  # Optional 
        
 
 
