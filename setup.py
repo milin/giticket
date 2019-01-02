@@ -52,7 +52,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'giticket = giticket.__main__:main',
+            'giticket = giticket.giticket:main',
         ]
 
     }
