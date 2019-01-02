@@ -3,5 +3,6 @@
   name: giticket
   entry: giticket
   language_version: python3
+  language: python
   stages: [commit-msg]
   description: Utility to prepend your commits with info from your branch.
