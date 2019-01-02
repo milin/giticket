@@ -31,9 +31,9 @@ For this to work the following two conditions must be met:
    - The ticket format regex specified must match, if the regex is passed in.
    - The branch name format must be <ticket number>_<rest of the branch name>
 
-For e.g. if you name your branch ``JIRA-1234_awesome_feature`` and commit ``Fix some bug``, the commit will be updated to ``JIRA-1234 Fix some bug``. 
+For e.g. if you name your branch ``JIRA-1234_awesome_feature`` and commit ``Fix some bug``, the commit will be updated to ``JIRA-1234 Fix some bug``.
 
-Pass ``--regex=`` or update ``args: [--regex=<custom regex>]`` in your .yaml file if you have custom ticket regex. 
+Pass ``--regex=`` or update ``args: [--regex=<custom regex>]`` in your .yaml file if you have custom ticket regex.
 By default its ``[A-Z]+-\d+``.
 
 It is best used along with pre-commit_.
@@ -44,10 +44,10 @@ The following is a sample commit.
 
     repos:
     - repo:  https://github.com/milin/giticket
-      rev: 'master'
+      rev: '7de39cb'
       hooks:
       - id:  giticket
-        args: ['--regex=PROJ-[0-9]']  # Optional 
+        args: ['--regex=PROJ-[0-9]']  # Optional
 
 
 .. _pre-commit: https://pre-commit.com/
