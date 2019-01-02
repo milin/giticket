@@ -26,7 +26,14 @@ Auto add ticket info to your git commits.
 Features
 --------
 
-It integrates with [pre-commit](https://pre-commit.com/)
+This hook saves developers time by prepending ticket numbers to commit-msgs.
+For this to work the following two conditions must be met:
+   - The ticket format regex specified must match, if the regex is passed in.
+   - The branch name format must be <ticket number>_<rest of the branch name>
+
+For e.g. if you name your branch `JIRA-1234_awesome_feature` and commit `Fix some bug`, the commit will be updated to `JIRA-1234 Fix some bug`. Pass `--regex=` or update `args: [--regex=<custom regex>]` in your .yaml file if you have custom ticket regex. By default its `[A-Z]+-\d+`.
+
+It is best used along with [pre-commit](https://pre-commit.com/)
 
 The following is a sample commit.
 
