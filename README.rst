@@ -37,7 +37,7 @@ Pass ``--regex=`` or update ``args: [--regex=<custom regex>]`` in your .yaml fil
 By default its ``[A-Z]+-\d+``.
 
 
-It is best used along with pre-commit_. You can use it along with pre-commit by using the following hook.
+It is best used along with pre-commit_. You can use it along with pre-commit by adding the following hook in your ``.pre-commit-config.yaml`` file.
 
 ::
 
