@@ -49,13 +49,16 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
         args: ['--regex=PROJ-[0-9]']  # Optional
 
 
-## Precommit setup
+Precommit setup
+---------------
 
-   ### Install Pre-commit Hooks
-   ```bash
-   pip install pre-commit==1.11.1
-   pre-commit install
-   pre-commit install --hook-type commit-msg
-   ```
+   Install Pre-commit Hooks
+   ------------------------
+   ::
+    
+        pip install pre-commit==1.11.1
+        pre-commit install
+        pre-commit install --hook-type commit-msg
+  
 
 .. _pre-commit: https://pre-commit.com/
