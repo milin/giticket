@@ -53,7 +53,8 @@ Precommit setup
 ---------------
 
    Install Pre-commit Hooks
-   ------------------------
+   
+   
    ::
     
         pip install pre-commit==1.11.1
