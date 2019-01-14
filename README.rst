@@ -52,7 +52,7 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
 Precommit setup
 ---------------
 
-   Install Pre-commit Hooks
+   You need to have precommit setup to use this hook. Install Pre-commit Hooks.
    
    
    ::
