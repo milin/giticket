@@ -49,10 +49,9 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
         args: ['--regex=PROJ-[0-9]']  # Optional
 
 
-Precommit setup
----------------
-
-   You need to have precommit setup to use this hook. Install Pre-commit Hooks.
+You need to have precommit setup to use this hook.
+--------------------------------------------------
+   Install Pre-commit and the commit-msg hook-type.
    
    
    ::
