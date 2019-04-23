@@ -22,7 +22,7 @@ def update_commit_message(filename, regex, format_string):
             re.search(regex, branch),
         ]):
             ticket = branch.split(six.text_type('_'))[0]
-            new_commit_msg = format_string.format(ticket=ticket, commit_msg=commit_msg)
+            new_commit_msg = format_string.format(ticket=ticket.strip(), commit_msg=commit_msg.strip())
             fd.seek(0)
             fd.write(
                 six.text_type(
