@@ -8,4 +8,5 @@ Development Lead
 
 Contributors
 ~~~~~~~~~~~~
-Why not be the first one?
+
+* Scott Peshak - https://github.com/speshak
