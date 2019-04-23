@@ -46,7 +46,7 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
 
     repos:
     - repo:  https://github.com/milin/giticket
-      rev: '8814c81'
+      rev: 'e0bf7ae'
       hooks:
       - id:  giticket
         args: ['--regex=PROJ-[0-9]']  # Optional
@@ -55,13 +55,13 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
 You need to have precommit setup to use this hook.
 --------------------------------------------------
    Install Pre-commit and the commit-msg hook-type.
-   
-   
+
+
    ::
-    
+
         pip install pre-commit==1.11.1
         pre-commit install
         pre-commit install --hook-type commit-msg
-  
+
 
 .. _pre-commit: https://pre-commit.com/
