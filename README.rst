@@ -40,16 +40,28 @@ Pass ``--format=`` or update ``args: [--format=<custom template string>]`` in yo
 By default it's ``'{ticket} {commit_msg}``, where ``ticket`` is replaced with the found ticket number and ``commit_msg`` is replaced with the original commit message.
 
 
-It is best used along with pre-commit_. You can use it along with pre-commit by using the following hook.
+It is best used along with pre-commit_. You can use it along with pre-commit by adding the following hook in your ``.pre-commit-config.yaml`` file.
 
 ::
 
     repos:
     - repo:  https://github.com/milin/giticket
-      rev: '7de39cb'
+      rev: '8814c81'
       hooks:
       - id:  giticket
         args: ['--regex=PROJ-[0-9]']  # Optional
 
+
+You need to have precommit setup to use this hook.
+--------------------------------------------------
+   Install Pre-commit and the commit-msg hook-type.
+   
+   
+   ::
+    
+        pip install pre-commit==1.11.1
+        pre-commit install
+        pre-commit install --hook-type commit-msg
+  
 
 .. _pre-commit: https://pre-commit.com/
