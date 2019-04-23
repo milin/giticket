@@ -49,7 +49,7 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
       rev: 'e0bf7ae'
       hooks:
       - id:  giticket
-        args: ['--regex=PROJ-[0-9]']  # Optional
+        args: ['--regex=PROJ-[0-9]', --format='"{ticket} {commit-msg}"']  # Optional
 
 
 You need to have precommit setup to use this hook.
