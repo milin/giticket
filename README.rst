@@ -46,10 +46,10 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
 
     repos:
     - repo:  https://github.com/milin/giticket
-      rev: '65ce90f'
+      rev: '668a90f'
       hooks:
       - id:  giticket
-        args: ['--regex=PROJ-[0-9]', '--format="{ticket} {commit-msg}"']  # Optional
+        args: ['--regex=PROJ-[0-9]', '--format={ticket} {commit_msg}']  # Optional
 
 
 You need to have precommit setup to use this hook.
