@@ -10,3 +10,4 @@ Contributors
 ~~~~~~~~~~~~
 
 * Scott Peshak - https://github.com/speshak
+* kir0ul - https://github.com/kir0ul
