@@ -10,19 +10,32 @@ import sys
 
 import six
 
+underscore_split_mode = 'underscore_split'
+regex_match_mode = 'regex_match'
 
-def update_commit_message(filename, regex, format_string):
+
+def update_commit_message(filename, regex, mode, format_string):
     with io.open(filename, 'r+') as fd:
         contents = fd.readlines()
         commit_msg = contents[0]
         # Check if we can grab ticket info from branch name.
         branch = get_branch_name()
-        if all([
-            not re.search(regex, commit_msg),
-            re.search(regex, branch),
-        ]):
-            ticket = branch.split(six.text_type('_'))[0]
-            new_commit_msg = format_string.format(ticket=ticket.strip(), commit_msg=commit_msg.strip())
+
+        # Bail if commit message already contains tickets
+        if re.search(regex, commit_msg):
+            return
+
+        tickets = re.findall(regex, branch)
+        if tickets:
+            if mode == underscore_split_mode:
+                tickets = [branch.split(six.text_type('_'))[0]]
+            tickets = [t.strip() for t in tickets]
+
+            new_commit_msg = format_string.format(
+                ticket=tickets[0], tickets=', '.join(tickets),
+                commit_msg=commit_msg.strip()
+            )
+
             fd.seek(0)
             fd.write(
                 six.text_type(
@@ -55,10 +68,13 @@ def main(argv=None):
     parser.add_argument('filenames', nargs='+')
     parser.add_argument('--regex')
     parser.add_argument('--format')
+    parser.add_argument('--mode', nargs='?', const=underscore_split_mode,
+                        default=underscore_split_mode,
+                        choices=[underscore_split_mode, regex_match_mode])
     args = parser.parse_args(argv)
     regex = args.regex or '[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
-    update_commit_message(args.filenames[0], regex, format_string)
+    update_commit_message(args.filenames[0], regex, args.mode, format_string)
 
 
 if __name__ == '__main__':

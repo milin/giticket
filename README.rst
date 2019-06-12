@@ -29,7 +29,7 @@ Features
 This hook saves developers time by prepending ticket numbers to commit-msgs.
 For this to work the following two conditions must be met:
    - The ticket format regex specified must match, if the regex is passed in.
-   - The branch name format must be <ticket number>_<rest of the branch name>
+   - Unless you use ``regex_match`` mode, the branch name format must be <ticket number>_<rest of the branch name>
 
 For e.g. if you name your branch ``JIRA-1234_awesome_feature`` and commit ``Fix some bug``, the commit will be updated to ``JIRA-1234 Fix some bug``.
 
@@ -39,6 +39,8 @@ By default it's ``[A-Z]+-\d+``.
 Pass ``--format=`` or update ``args: [--format=<custom template string>]`` in your .yaml file if you have custom message replacement.
 By default it's ``'{ticket} {commit_msg}``, where ``ticket`` is replaced with the found ticket number and ``commit_msg`` is replaced with the original commit message.
 
+Pass ``--mode=`` or update ``args: [--mode=regex_match]`` in your .yaml file to extract ticket by the regex rather than relying on branch name convention.
+With this mode you can also make use of ``{tickets}`` placeholder in ``format`` argument value to put multiple comma-separated tickets in the commit message in case your branch contains more than one ticket.
 
 It is best used along with pre-commit_. You can use it along with pre-commit by adding the following hook in your ``.pre-commit-config.yaml`` file.
 
