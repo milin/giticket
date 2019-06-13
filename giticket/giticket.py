@@ -33,15 +33,12 @@ def update_commit_message(filename, regex, mode, format_string):
 
             new_commit_msg = format_string.format(
                 ticket=tickets[0], tickets=', '.join(tickets),
-                commit_msg=commit_msg.strip()
+                commit_msg=commit_msg
             )
 
+            contents[0] = six.text_type(new_commit_msg)
             fd.seek(0)
-            fd.write(
-                six.text_type(
-                    new_commit_msg,
-                ),
-            )
+            fd.writelines(contents)
             fd.truncate()
 
 

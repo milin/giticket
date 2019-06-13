@@ -11,6 +11,8 @@ from giticket.giticket import update_commit_message
 
 TESTING_MODULE = 'giticket.giticket'
 
+COMMIT_MESSAGE = 'Test commit message\n\nFoo bar\nBaz qux'
+
 
 @pytest.mark.parametrize('msg', (
     'Test ABC-1 message',
@@ -40,11 +42,11 @@ def test_update_commit_message_underscore_split_mode(mock_branch_name,
                                                      test_data, tmpdir):
     mock_branch_name.return_value = test_data[0]
     path = tmpdir.join('file.txt')
-    path.write('Test commit message')
+    path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), '[A-Z]+-\d+',
                           'underscore_split', '{ticket}: {commit_msg}')
-    assert path.read() == '{expected_ticket}: Test commit message'.format(
-        expected_ticket=test_data[1]
+    assert path.read() == '{expected_ticket}: {message}'.format(
+        expected_ticket=test_data[1], message=COMMIT_MESSAGE
     )
 
 
@@ -62,10 +64,10 @@ def test_update_commit_message_regex_match_mode(mock_branch_name,
                                                 branch_name, tmpdir):
     mock_branch_name.return_value = branch_name
     path = tmpdir.join('file.txt')
-    path.write('Test commit message')
+    path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), '[A-Z]+-\d+',
                           'regex_match', '{ticket}: {commit_msg}')
-    assert path.read() == 'JIRA-1234: Test commit message'
+    assert path.read() == 'JIRA-1234: {message}'.format(message=COMMIT_MESSAGE)
 
 
 @pytest.mark.parametrize('test_data', (
@@ -79,11 +81,11 @@ def test_update_commit_message_multiple_ticket_first_selected(mock_branch_name,
                                                               tmpdir):
     mock_branch_name.return_value = test_data[0]
     path = tmpdir.join('file.txt')
-    path.write('Test commit message')
+    path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), '[A-Z]+-\d+',
                           'regex_match', '{ticket}: {commit_msg}')
-    assert path.read() == '{expected_ticket}: Test commit message'.format(
-        expected_ticket=test_data[1]
+    assert path.read() == '{expected_ticket}: {message}'.format(
+        expected_ticket=test_data[1], message=COMMIT_MESSAGE
     )
 
 
@@ -97,11 +99,11 @@ def test_update_commit_message_multiple_ticket_all_selected(mock_branch_name,
                                                             test_data, tmpdir):
     mock_branch_name.return_value = test_data[0]
     path = tmpdir.join('file.txt')
-    path.write('Test commit message')
+    path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), '[A-Z]+-\d+',
                           'regex_match', '{tickets}: {commit_msg}')
-    assert path.read() == '{expected_tickets}: Test commit message'.format(
-        expected_tickets=test_data[1]
+    assert path.read() == '{expected_tickets}: {message}'.format(
+        expected_tickets=test_data[1], message=COMMIT_MESSAGE
     )
 
 
