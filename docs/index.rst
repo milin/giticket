@@ -11,6 +11,7 @@ Welcome to giticket's documentation!
    modules
    contributing
    history
+   authors
 
 Indices and tables
 ==================
