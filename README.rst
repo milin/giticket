@@ -48,7 +48,7 @@ It is best used along with pre-commit_. You can use it along with pre-commit by 
 
     repos:
     - repo:  https://github.com/milin/giticket
-      rev: <grab the latest commit hash>
+      rev: v1.0
       hooks:
       - id:  giticket
         args: ['--regex=PROJ-[0-9]', '--format={ticket} {commit_msg}']  # Optional
