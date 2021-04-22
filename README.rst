@@ -62,8 +62,7 @@ You need to have precommit setup to use this hook.
    ::
 
         pip install pre-commit
-        pre-commit install
-        pre-commit install --hook-type commit-msg
+        pre-commit install --install-hooks
 
 
 .. _pre-commit: https://pre-commit.com/
