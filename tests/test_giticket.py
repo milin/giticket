@@ -24,7 +24,7 @@ def test_update_commit_message_no_modification(mock_branch_name, msg, tmpdir):
     mock_branch_name.return_value = 'JIRA-1234_new_feature'
     path = tmpdir.join('file.txt')
     path.write(msg)
-    update_commit_message(six.text_type(path), '[A-Z]+-\d+',
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'underscore_split', '{ticket} {commit_msg}')
     # Message should remain intact as it contains some ticket
     assert path.read() == msg
@@ -43,7 +43,7 @@ def test_update_commit_message_underscore_split_mode(mock_branch_name,
     mock_branch_name.return_value = test_data[0]
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
-    update_commit_message(six.text_type(path), '[A-Z]+-\d+',
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'underscore_split', '{ticket}: {commit_msg}')
     assert path.read() == '{expected_ticket}: {message}'.format(
         expected_ticket=test_data[1], message=COMMIT_MESSAGE
@@ -65,7 +65,7 @@ def test_update_commit_message_regex_match_mode(mock_branch_name,
     mock_branch_name.return_value = branch_name
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
-    update_commit_message(six.text_type(path), '[A-Z]+-\d+',
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'regex_match', '{ticket}: {commit_msg}')
     assert path.read() == 'JIRA-1234: {message}'.format(message=COMMIT_MESSAGE)
 
@@ -82,7 +82,7 @@ def test_update_commit_message_multiple_ticket_first_selected(mock_branch_name,
     mock_branch_name.return_value = test_data[0]
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
-    update_commit_message(six.text_type(path), '[A-Z]+-\d+',
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'regex_match', '{ticket}: {commit_msg}')
     assert path.read() == '{expected_ticket}: {message}'.format(
         expected_ticket=test_data[1], message=COMMIT_MESSAGE
@@ -100,11 +100,29 @@ def test_update_commit_message_multiple_ticket_all_selected(mock_branch_name,
     mock_branch_name.return_value = test_data[0]
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
-    update_commit_message(six.text_type(path), '[A-Z]+-\d+',
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'regex_match', '{tickets}: {commit_msg}')
     assert path.read() == '{expected_tickets}: {message}'.format(
         expected_tickets=test_data[1], message=COMMIT_MESSAGE
     )
+
+
+@pytest.mark.parametrize('msg', (
+    "\n",
+    "a bogus message\n"
+    """A message
+
+With a description\n""",
+))
+@mock.patch(TESTING_MODULE + '.get_branch_name')
+def test_ci_message_with_nl_regex_match_mode(mock_branch_name, msg, tmpdir):
+    first_line = msg.split('\n')[0].strip()
+    mock_branch_name.return_value = "JIRA-239_mock_branch"
+    path = tmpdir.join('file.txt')
+    path.write(msg)
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
+                          'regex_match', '{commit_msg} - {ticket}')
+    assert path.read().split('\n')[0] == "{first_line} - {ticket}".format(first_line=first_line, ticket="JIRA-239")
 
 
 @mock.patch(TESTING_MODULE + '.subprocess')
@@ -130,6 +148,6 @@ def test_main(mock_update_commit_message, mock_argparse):
     mock_args.mode = 'underscore_split'
     mock_argparse.ArgumentParser.return_value.parse_args.return_value = mock_args
     main()
-    mock_update_commit_message.assert_called_once_with('foo.txt', '[A-Z]+-\d+',
+    mock_update_commit_message.assert_called_once_with('foo.txt', r'[A-Z]+-\d+',
                                                        'underscore_split',
                                                        '{ticket} {commit_msg}')

@@ -17,7 +17,7 @@ regex_match_mode = 'regex_match'
 def update_commit_message(filename, regex, mode, format_string):
     with io.open(filename, 'r+') as fd:
         contents = fd.readlines()
-        commit_msg = contents[0]
+        commit_msg = contents[0].rstrip('\r\n')
         # Check if we can grab ticket info from branch name.
         branch = get_branch_name()
 
@@ -36,7 +36,7 @@ def update_commit_message(filename, regex, mode, format_string):
                 commit_msg=commit_msg
             )
 
-            contents[0] = six.text_type(new_commit_msg)
+            contents[0] = six.text_type(new_commit_msg + "\n")
             fd.seek(0)
             fd.writelines(contents)
             fd.truncate()
@@ -69,7 +69,7 @@ def main(argv=None):
                         default=underscore_split_mode,
                         choices=[underscore_split_mode, regex_match_mode])
     args = parser.parse_args(argv)
-    regex = args.regex or '[A-Z]+-\d+'  # noqa
+    regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
     update_commit_message(args.filenames[0], regex, args.mode, format_string)
 
