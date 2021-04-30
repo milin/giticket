@@ -73,7 +73,8 @@ Ready to contribute? Here's how to set up `giticket` for local development.
 4. Set up pre-commit::
 
     $ pip install pre-commit
-    $ pre-commit install --install-hooks
+    $ pre-commit install
+    $ pre-commit install --hook-type commit-msg
 
 5. Create a branch for local development::
 
