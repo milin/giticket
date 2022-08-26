@@ -22,7 +22,7 @@ def update_commit_message(filename, regex, mode, format_string):
         branch = get_branch_name()
 
         # Bail if commit message already contains tickets
-        if re.search(regex, commit_msg):
+        if any(re.search(regex, content) for content in contents):
             return
 
         tickets = re.findall(regex, branch)
