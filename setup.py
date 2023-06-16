@@ -21,35 +21,20 @@ setup_requirements = ['pytest-runner', ]
 test_requirements = ['pytest', ]
 
 setup(
-    author="Milind Shakya",
-    author_email='sh.milind@gmail.com',
-    classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-    ],
-    description="Auto add ticket info to your git commits.",
     install_requires=requirements,
     license="MIT license",
-    long_description=readme + '\n\n' + history,
     include_package_data=True,
-    keywords='giticket',
-    name='giticket',
-    packages=find_packages(include=['giticket']),
+    keywords='gitmsg',
+    name='gitmsg',
+    packages=find_packages(include=['gitmsg']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/milin/giticket',
     version='0.1.5',
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'giticket = giticket.giticket:main',
+            'gitmsg = gitmsg.gitmsg:main',
         ]
 
     }
