@@ -71,6 +71,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
+    format_string = format_string.replace('\\n', '\n')
     update_commit_message(args.filenames[0], regex, args.mode, format_string)
 
 
