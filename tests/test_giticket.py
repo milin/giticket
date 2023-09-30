@@ -5,9 +5,13 @@ import mock
 import pytest
 import six
 
-from giticket.giticket import get_branch_name
-from giticket.giticket import main
-from giticket.giticket import update_commit_message
+from giticket.giticket import (
+    get_branch_name,
+    main,
+    update_commit_message,
+    REGEX_MATCH_MODE,
+    UNDERSCORE_SPLIT_MODE,
+)
 
 TESTING_MODULE = 'giticket.giticket'
 
@@ -25,7 +29,7 @@ def test_update_commit_message_no_modification(mock_branch_name, msg, tmpdir):
     path = tmpdir.join('file.txt')
     path.write(msg)
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
-                          'underscore_split', '{ticket} {commit_msg}')
+                          UNDERSCORE_SPLIT_MODE, '{ticket} {commit_msg}')
     # Message should remain intact as it contains some ticket
     assert path.read() == msg
 
@@ -44,7 +48,7 @@ def test_update_commit_message_underscore_split_mode(mock_branch_name,
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
-                          'underscore_split', '{ticket}: {commit_msg}')
+                          UNDERSCORE_SPLIT_MODE, '{ticket}: {commit_msg}')
     assert path.read() == '{expected_ticket}: {message}'.format(
         expected_ticket=test_data[1], message=COMMIT_MESSAGE
     )
@@ -66,7 +70,7 @@ def test_update_commit_message_regex_match_mode(mock_branch_name,
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
-                          'regex_match', '{ticket}: {commit_msg}')
+                          REGEX_MATCH_MODE, '{ticket}: {commit_msg}')
     assert path.read() == 'JIRA-1234: {message}'.format(message=COMMIT_MESSAGE)
 
 
@@ -83,7 +87,7 @@ def test_update_commit_message_multiple_ticket_first_selected(mock_branch_name,
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
-                          'regex_match', '{ticket}: {commit_msg}')
+                          REGEX_MATCH_MODE, '{ticket}: {commit_msg}')
     assert path.read() == '{expected_ticket}: {message}'.format(
         expected_ticket=test_data[1], message=COMMIT_MESSAGE
     )
@@ -101,7 +105,7 @@ def test_update_commit_message_multiple_ticket_all_selected(mock_branch_name,
     path = tmpdir.join('file.txt')
     path.write(COMMIT_MESSAGE)
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
-                          'regex_match', '{tickets}: {commit_msg}')
+                          REGEX_MATCH_MODE, '{tickets}: {commit_msg}')
     assert path.read() == '{expected_tickets}: {message}'.format(
         expected_tickets=test_data[1], message=COMMIT_MESSAGE
     )
@@ -121,7 +125,7 @@ def test_ci_message_with_nl_regex_match_mode(mock_branch_name, msg, tmpdir):
     path = tmpdir.join('file.txt')
     path.write(msg)
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
-                          'regex_match', '{commit_msg} - {ticket}')
+                          REGEX_MATCH_MODE, '{commit_msg} - {ticket}')
     assert path.read().split('\n')[0] == "{first_line} - {ticket}".format(first_line=first_line, ticket="JIRA-239")
 
 
@@ -138,7 +142,7 @@ def test_update_commit_message_no_modification_if_ticket_in_body(mock_branch_nam
     path = tmpdir.join('file.txt')
     path.write(msg)
     update_commit_message(six.text_type(path), r'\d{4,}',
-                          'regex_match', '{commit_msg}\n\nIssue: {ticket}')
+                          REGEX_MATCH_MODE, '{commit_msg}\n\nIssue: {ticket}')
     assert path.read() == msg
 
 
@@ -162,9 +166,9 @@ def test_main(mock_update_commit_message, mock_argparse):
     mock_args.filenames = ['foo.txt']
     mock_args.regex = None
     mock_args.format = None
-    mock_args.mode = 'underscore_split'
+    mock_args.mode = UNDERSCORE_SPLIT_MODE
     mock_argparse.ArgumentParser.return_value.parse_args.return_value = mock_args
     main()
     mock_update_commit_message.assert_called_once_with('foo.txt', r'[A-Z]+-\d+',
-                                                       'underscore_split',
+                                                       UNDERSCORE_SPLIT_MODE,
                                                        '{ticket} {commit_msg}')

@@ -10,8 +10,8 @@ import sys
 
 import six
 
-underscore_split_mode = 'underscore_split'
-regex_match_mode = 'regex_match'
+UNDERSCORE_SPLIT_MODE = 'underscore_split'
+REGEX_MATCH_MODE = 'regex_match'
 
 
 def update_commit_message(filename, regex, mode, format_string):
@@ -27,7 +27,7 @@ def update_commit_message(filename, regex, mode, format_string):
 
         tickets = re.findall(regex, branch)
         if tickets:
-            if mode == underscore_split_mode:
+            if mode == UNDERSCORE_SPLIT_MODE:
                 tickets = [branch.split(six.text_type('_'))[0]]
             tickets = [t.strip() for t in tickets]
 
@@ -65,9 +65,9 @@ def main(argv=None):
     parser.add_argument('filenames', nargs='+')
     parser.add_argument('--regex')
     parser.add_argument('--format')
-    parser.add_argument('--mode', nargs='?', const=underscore_split_mode,
-                        default=underscore_split_mode,
-                        choices=[underscore_split_mode, regex_match_mode])
+    parser.add_argument('--mode', nargs='?', const=UNDERSCORE_SPLIT_MODE,
+                        default=UNDERSCORE_SPLIT_MODE,
+                        choices=[UNDERSCORE_SPLIT_MODE, REGEX_MATCH_MODE])
     args = parser.parse_args(argv)
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
