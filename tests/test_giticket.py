@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import mock
 import pytest
 import six
-
 from giticket.giticket import (
     get_branch_name,
     main,
@@ -127,6 +126,22 @@ def test_ci_message_with_nl_regex_match_mode(mock_branch_name, msg, tmpdir):
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           REGEX_MATCH_MODE, '{commit_msg} - {ticket}')
     assert path.read().split('\n')[0] == "{first_line} - {ticket}".format(first_line=first_line, ticket="JIRA-239")
+
+
+@mock.patch(TESTING_MODULE + '.get_branch_name')
+def test_update_commit_message_with_new_line_characters(mock_branch_name, tmpdir):
+    msg = 'Test Message'
+    mock_branch_name.return_value = "team_name/2397/a_nice_feature"
+
+    path = tmpdir.join('file.txt')
+    path.write(msg)
+
+    path_with_expected_message = tmpdir.join('expected.txt')
+    path_with_expected_message.write(f'{msg}\n\nIssue: 2397\n')
+
+    update_commit_message(six.text_type(path), r'\d{4,}',
+                          REGEX_MATCH_MODE, r'{commit_msg}\n\nIssue: {ticket}')
+    assert path.read() == path_with_expected_message.read()
 
 
 @pytest.mark.parametrize('msg', (
