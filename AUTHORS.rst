@@ -13,3 +13,4 @@ Contributors
 * kir0ul - https://github.com/kir0ul
 * Daniil Penkin - https://github.com/detouched
 * Joseph S. Tate - https://github.com/josephtate
+* Ivan Studinsky - https://github.com/vanya909

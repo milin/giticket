@@ -10,11 +10,15 @@ import sys
 
 import six
 
-underscore_split_mode = 'underscore_split'
-regex_match_mode = 'regex_match'
+UNDERSCORE_SPLIT_MODE = 'underscore_split'
+REGEX_MATCH_MODE = 'regex_match'
 
 
 def update_commit_message(filename, regex, mode, format_string):
+    # All escape sequences will be escaped with double backslash, so need to
+    # replace escaped new-line character with normal one
+    format_string = format_string.replace('\\n', '\n')
+
     with io.open(filename, 'r+') as fd:
         contents = fd.readlines()
         commit_msg = contents[0].rstrip('\r\n')
@@ -27,7 +31,7 @@ def update_commit_message(filename, regex, mode, format_string):
 
         tickets = re.findall(regex, branch)
         if tickets:
-            if mode == underscore_split_mode:
+            if mode == UNDERSCORE_SPLIT_MODE:
                 tickets = [branch.split(six.text_type('_'))[0]]
             tickets = [t.strip() for t in tickets]
 
@@ -54,6 +58,18 @@ def get_branch_name():
     ).decode('UTF-8')
 
 
+def get_args(argv=None):
+    """Parse and return all args passed to script."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filenames', nargs='+')
+    parser.add_argument('--regex')
+    parser.add_argument('--format')
+    parser.add_argument('--mode', nargs='?', const=UNDERSCORE_SPLIT_MODE,
+                        default=UNDERSCORE_SPLIT_MODE,
+                        choices=[UNDERSCORE_SPLIT_MODE, REGEX_MATCH_MODE])
+    return parser.parse_args(argv)
+
+
 def main(argv=None):
     """This hook saves developers time by prepending ticket numbers to commit-msgs.
     For this to work the following two conditions must be met:
@@ -61,14 +77,7 @@ def main(argv=None):
         - The ticket format regex specified must match.
         - The branch name format must be <ticket number>_<rest of the branch name>
     """
-    parser = argparse.ArgumentParser()
-    parser.add_argument('filenames', nargs='+')
-    parser.add_argument('--regex')
-    parser.add_argument('--format')
-    parser.add_argument('--mode', nargs='?', const=underscore_split_mode,
-                        default=underscore_split_mode,
-                        choices=[underscore_split_mode, regex_match_mode])
-    args = parser.parse_args(argv)
+    args = get_args(argv)
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
     update_commit_message(args.filenames[0], regex, args.mode, format_string)
