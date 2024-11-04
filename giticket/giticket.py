@@ -17,12 +17,12 @@ regex_match_mode = 'regex_match'
 def update_commit_message(filename, regex, mode, format_string):
     with io.open(filename, 'r+') as fd:
         contents = fd.readlines()
-        commit_msg = contents[0].rstrip('\r\n')
+        commit_msg = [line for line in contents if not line.startswith('#')]
         # Check if we can grab ticket info from branch name.
         branch = get_branch_name()
 
         # Bail if commit message already contains tickets
-        if any(re.search(regex, content) for content in contents):
+        if any(re.search(regex, commit_msg_line) for commit_msg_line in commit_msg):
             return
 
         tickets = re.findall(regex, branch)
@@ -33,7 +33,7 @@ def update_commit_message(filename, regex, mode, format_string):
 
             new_commit_msg = format_string.format(
                 ticket=tickets[0], tickets=', '.join(tickets),
-                commit_msg=commit_msg
+                commit_msg="\n".join(commit_msg)
             )
 
             contents[0] = six.text_type(new_commit_msg + "\n")
