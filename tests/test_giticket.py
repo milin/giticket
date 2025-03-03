@@ -142,6 +142,21 @@ def test_update_commit_message_no_modification_if_ticket_in_body(mock_branch_nam
     assert path.read() == msg
 
 
+@pytest.mark.parametrize('msg', (
+    """fixup! A descriptive header
+
+A descriptive body.""",
+))
+@mock.patch(TESTING_MODULE + '.get_branch_name')
+def test_update_commit_message_no_modification_if_commit_is_a_fixup(mock_branch_name, msg, tmpdir):
+    mock_branch_name.return_value = "team_name/2397/a_nice_feature"
+    path = tmpdir.join('file.txt')
+    path.write(msg)
+    update_commit_message(six.text_type(path), r'\d{4,}',
+                          'regex_match', '{commit_msg}\n\nIssue: {ticket}')
+    assert path.read() == msg
+
+
 @mock.patch(TESTING_MODULE + '.subprocess')
 def test_get_branch_name(mock_subprocess):
     get_branch_name()
