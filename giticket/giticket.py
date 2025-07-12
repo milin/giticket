@@ -21,8 +21,8 @@ def update_commit_message(filename, regex, mode, format_string):
         # Check if we can grab ticket info from branch name.
         branch = get_branch_name()
 
-        # Bail if commit message already contains tickets
-        if any(re.search(regex, content) for content in contents):
+        # Bail if commit message starts with “fixup!” or commit message already contains tickets
+        if commit_msg.startswith('fixup!') or any(re.search(regex, content) for content in contents):
             return
 
         tickets = re.findall(regex, branch)
