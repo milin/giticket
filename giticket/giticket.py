@@ -37,7 +37,7 @@ def update_commit_message(filename, regex, mode, format_string):
 
             if len(parts) >= 2:
                 commit_type = parts[0]  # e.g., "fix"
-                commit_scope = parts[1]  # e.g., "CP"
+                commit_scope = parts[1]  # e.g., "FE"
                 commit_message = parts[2] if len(parts) > 2 else ""
 
                 # Format as conventional commit: type(scope): ticket message
