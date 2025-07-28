@@ -157,6 +157,22 @@ def test_update_commit_message_no_modification_if_commit_is_a_fixup(mock_branch_
     assert path.read() == msg
 
 
+@pytest.mark.parametrize('test_data', (
+    ('fix FE some message', 'SP-1234', 'fix(FE): SP-1234 some message'),
+    ('feat UI awesome feature', 'SP-5678', 'feat(UI): SP-5678 awesome feature'),
+    ('chore DEPS update dependencies', 'SP-9012', 'chore(DEPS): SP-9012 update dependencies'),
+))
+@mock.patch(TESTING_MODULE + '.get_branch_name')
+def test_update_commit_message_conventional_commit_structure(mock_branch_name, test_data, tmpdir):
+    commit_msg, ticket, expected_msg = test_data
+    mock_branch_name.return_value = "feature/{0}/some-branch-name".format(ticket)
+    path = tmpdir.join('file.txt')
+    path.write(commit_msg)
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
+                          'regex_match', '{ticket} {commit_msg}')
+    assert path.read() == expected_msg
+
+
 @mock.patch(TESTING_MODULE + '.subprocess')
 def test_get_branch_name(mock_subprocess):
     get_branch_name()

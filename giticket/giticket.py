@@ -31,10 +31,28 @@ def update_commit_message(filename, regex, mode, format_string):
                 tickets = [branch.split(six.text_type('_'))[0]]
             tickets = [t.strip() for t in tickets]
 
-            new_commit_msg = format_string.format(
-                ticket=tickets[0], tickets=', '.join(tickets),
-                commit_msg=commit_msg
-            )
+            # Parse commit message for conventional commit structure
+            # Expected format: "type scope message"
+            parts = commit_msg.split(' ', 2)
+
+            if len(parts) >= 2:
+                commit_type = parts[0]  # e.g., "fix"
+                commit_scope = parts[1]  # e.g., "CP"
+                commit_message = parts[2] if len(parts) > 2 else ""
+
+                # Format as conventional commit: type(scope): ticket message
+                new_commit_msg = "{type}({scope}): {ticket} {message}".format(
+                    type=commit_type,
+                    scope=commit_scope,
+                    ticket=tickets[0],
+                    message=commit_message
+                )
+            else:
+                # Fallback to original format if not enough parts
+                new_commit_msg = format_string.format(
+                    ticket=tickets[0], tickets=', '.join(tickets),
+                    commit_msg=commit_msg
+                )
 
             contents[0] = six.text_type(new_commit_msg + "\n")
             fd.seek(0)

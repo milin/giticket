@@ -34,6 +34,18 @@ For this to work the following two conditions must be met:
 
 For e.g. if you name your branch ``JIRA-1234_awesome_feature`` and commit ``Fix some bug``, the commit will be updated to ``JIRA-1234 Fix some bug``.
 
+Conventional Commit Structure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Giticket now supports conventional commit structure. If your commit message follows the format ``type scope message``, it will be automatically formatted as ``type(scope): ticket message``.
+
+For example:
+
+- If your branch is ``feature/SP-1234/awesome-feature`` and you commit ``fix FE some bug``, the commit will be updated to ``fix(FE): SP-1234 some bug``.
+- If your branch is ``feature/SP-5678/new-ui`` and you commit ``feat UI awesome feature``, the commit will be updated to ``feat(UI): SP-5678 awesome feature``.
+
+This helps maintain a consistent commit message format following conventional commit standards while automatically including the ticket number from your branch name.
+
 Pass ``--regex=`` or update ``args: [--regex=<custom regex>]`` in your .yaml file if you have custom ticket regex.
 By default it's ``[A-Z]+-\d+``.
 
