@@ -124,6 +124,16 @@ def test_ci_message_with_nl_regex_match_mode(mock_branch_name, msg, tmpdir):
                           'regex_match', '{commit_msg} - {ticket}')
     assert path.read().split('\n')[0] == "{first_line} - {ticket}".format(first_line=first_line, ticket="JIRA-239")
 
+# create a unit test to verify that if the --conventionalcommits flag is set,
+# the commit message is updated according to the conventional commit format
+@mock.patch(TESTING_MODULE + '.get_branch_name')
+def test_update_commit_message_conventionalcommits(mock_branch_name, tmpdir):
+    mock_branch_name.return_value = "JIRA-5678_new_feature"
+    path = tmpdir.join('file.txt')
+    path.write("feat: add new feature")
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
+                          'regex_match', '{commit_msg}', conventionalcommits=True)
+    assert path.read() == "feat(JIRA-5678): add new feature\n"
 
 @pytest.mark.parametrize('msg', (
     """A descriptive header
@@ -178,8 +188,10 @@ def test_main(mock_update_commit_message, mock_argparse):
     mock_args.regex = None
     mock_args.format = None
     mock_args.mode = 'underscore_split'
+    mock_args.conventionalcommits = True
     mock_argparse.ArgumentParser.return_value.parse_args.return_value = mock_args
     main()
     mock_update_commit_message.assert_called_once_with('foo.txt', r'[A-Z]+-\d+',
                                                        'underscore_split',
-                                                       '{ticket} {commit_msg}')
+                                                       '{ticket} {commit_msg}',
+                                                       True)
