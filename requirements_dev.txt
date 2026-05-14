@@ -9,6 +9,7 @@ Sphinx==1.8.1
 twine==1.12.1
 six
 mock
+pre-commit
 
 pytest==3.8.2
 pytest-runner==4.2

@@ -14,6 +14,7 @@ underscore_split_mode = 'underscore_split'
 regex_match_mode = 'regex_match'
 conventionalcommit_regex = r'^(?P<type>build|chore|ci|docs|feat|fix|perf|refactor|style|test)(\((?P<scope>.+)\))?: (?P<subject>.+)'
 
+
 def capitalize_first(text):
     return text[:1].upper() + text[1:] if text else text
 
