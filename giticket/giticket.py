@@ -19,7 +19,7 @@ def capitalize(text, capitalize_spaces):
     return text[:capitalize_spaces].upper() + text[capitalize_spaces:] if text else text
 
 
-def update_commit_message(filename, regex, mode, format_string, capitalize_spaces, conventionalcommits=False):
+def update_commit_message(filename, regex, mode, format_string, conventionalcommits=False, capitalize_spaces=0):
     with io.open(filename, 'r+') as fd:
         contents = fd.readlines()
         commit_msg = contents[0].rstrip('\r\n')
@@ -45,8 +45,6 @@ def update_commit_message(filename, regex, mode, format_string, capitalize_space
                 else:
                     scope = ', '.join(tickets)
                 subject = match.group('subject')
-                if capitalize:
-                    subject = capitalize(subject)
                 format_string = '{type}({scope}): {subject}'
                 new_commit_msg = format_string.format(
                     type=type, scope=scope, subject=subject
@@ -99,7 +97,7 @@ def main(argv=None):
         return 1
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
-    capitalize_spaces = args.capitalize or 1
+    capitalize_spaces = args.capitalize or 0
     update_commit_message(args.filenames[0], regex, args.mode, format_string, args.conventionalcommits, capitalize_spaces)
 
 

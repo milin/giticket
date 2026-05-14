@@ -144,8 +144,19 @@ def test_update_commit_message_capitalize(mock_branch_name, tmpdir):
     path.write("Test commit message")
     update_commit_message(six.text_type(path), r'[a-zA-Z]+-\d+',
                           'regex_match', '{ticket}: {commit_msg}',
-                          capitalize=True)
+                          capitalize_spaces=1)
     assert path.read() == "Jira-1234: Test commit message\n"
+
+
+@mock.patch(TESTING_MODULE + '.get_branch_name')
+def test_update_commit_message_capitalize_multiple_chars(mock_branch_name, tmpdir):
+    mock_branch_name.return_value = "jira-1234"
+    path = tmpdir.join('file.txt')
+    path.write("Test commit message")
+    update_commit_message(six.text_type(path), r'[a-zA-Z]+-\d+',
+                          'regex_match', '{ticket}: {commit_msg}',
+                          capitalize_spaces=4)
+    assert path.read() == "JIRA-1234: Test commit message\n"
 
 
 @mock.patch(TESTING_MODULE + '.get_branch_name')
@@ -155,7 +166,7 @@ def test_update_commit_message_capitalize_already_uppercase(mock_branch_name, tm
     path.write("Test commit message")
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'regex_match', '{ticket}: {commit_msg}',
-                          capitalize=True)
+                          capitalize_spaces=1)
     assert path.read() == "JIRA-1234: Test commit message\n"
 
 
@@ -166,8 +177,8 @@ def test_update_commit_message_capitalize_conventionalcommits(mock_branch_name, 
     path.write("feat: add new feature")
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'regex_match', '{commit_msg}',
-                          conventionalcommits=True, capitalize=True)
-    assert path.read() == "feat(JIRA-5678): Add new feature\n"
+                          conventionalcommits=True, capitalize_spaces=1)
+    assert path.read() == "feat(JIRA-5678): add new feature\n"
 
 
 @mock.patch(TESTING_MODULE + '.get_branch_name')
@@ -234,7 +245,7 @@ def test_main(mock_update_commit_message, mock_argparse):
     mock_args.format = None
     mock_args.mode = 'underscore_split'
     mock_args.conventionalcommits = True
-    mock_args.capitalize = False
+    mock_args.capitalize = None
     mock_argparse.ArgumentParser.return_value.parse_args.return_value = mock_args
     main()
     mock_update_commit_message.assert_called_once_with('foo.txt', r'[A-Z]+-\d+',
