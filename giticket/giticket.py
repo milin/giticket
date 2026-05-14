@@ -14,7 +14,12 @@ underscore_split_mode = 'underscore_split'
 regex_match_mode = 'regex_match'
 conventionalcommit_regex = r'^(?P<type>build|chore|ci|docs|feat|fix|perf|refactor|style|test)(\((?P<scope>.+)\))?: (?P<subject>.+)'
 
-def update_commit_message(filename, regex, mode, format_string, conventionalcommits=False):
+
+def capitalize_first(text):
+    return text[:1].upper() + text[1:] if text else text
+
+
+def update_commit_message(filename, regex, mode, format_string, conventionalcommits=False, capitalize=False):
     with io.open(filename, 'r+') as fd:
         contents = fd.readlines()
         commit_msg = contents[0].rstrip('\r\n')
@@ -40,6 +45,8 @@ def update_commit_message(filename, regex, mode, format_string, conventionalcomm
                 else:
                     scope = ', '.join(tickets)
                 subject = match.group('subject')
+                if capitalize:
+                    subject = capitalize_first(subject)
                 format_string = '{type}({scope}): {subject}'
                 new_commit_msg = format_string.format(
                     type=type, scope=scope, subject=subject
@@ -49,6 +56,8 @@ def update_commit_message(filename, regex, mode, format_string, conventionalcomm
                     ticket=tickets[0], tickets=', '.join(tickets),
                     commit_msg=commit_msg
                 )
+                if capitalize:
+                    new_commit_msg = capitalize_first(new_commit_msg)
 
             contents[0] = six.text_type(new_commit_msg + "\n")
             fd.seek(0)
@@ -78,6 +87,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='+')
     parser.add_argument('--conventionalcommits', action='store_true')
+    parser.add_argument('--capitalize', action='store_true')
     parser.add_argument('--regex')
     parser.add_argument('--format', nargs='?')
     parser.add_argument('--mode', nargs='?', const=underscore_split_mode,
@@ -89,7 +99,7 @@ def main(argv=None):
         return 1
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
-    update_commit_message(args.filenames[0], regex, args.mode, format_string, args.conventionalcommits)
+    update_commit_message(args.filenames[0], regex, args.mode, format_string, args.conventionalcommits, args.capitalize)
 
 
 if __name__ == '__main__':
