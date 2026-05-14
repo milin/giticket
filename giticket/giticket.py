@@ -85,7 +85,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('filenames', nargs='+')
     parser.add_argument('--conventionalcommits', action='store_true')
-    parser.add_argument('--capitalize', nargs='?')
+    parser.add_argument('--capitalize', nargs='?', const=1, type=int, default=0)
     parser.add_argument('--regex')
     parser.add_argument('--format', nargs='?')
     parser.add_argument('--mode', nargs='?', const=underscore_split_mode,
@@ -97,8 +97,7 @@ def main(argv=None):
         return 1
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
-    capitalize_spaces = args.capitalize or 0
-    update_commit_message(args.filenames[0], regex, args.mode, format_string, args.conventionalcommits, capitalize_spaces)
+    update_commit_message(args.filenames[0], regex, args.mode, format_string, args.conventionalcommits, args.capitalize)
 
 
 if __name__ == '__main__':

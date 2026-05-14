@@ -245,11 +245,11 @@ def test_main(mock_update_commit_message, mock_argparse):
     mock_args.format = None
     mock_args.mode = 'underscore_split'
     mock_args.conventionalcommits = True
-    mock_args.capitalize = None
+    mock_args.capitalize = 0
     mock_argparse.ArgumentParser.return_value.parse_args.return_value = mock_args
     main()
     mock_update_commit_message.assert_called_once_with('foo.txt', r'[A-Z]+-\d+',
                                                        'underscore_split',
                                                        '{ticket} {commit_msg}',
                                                        True,
-                                                       False)
+                                                       0)
