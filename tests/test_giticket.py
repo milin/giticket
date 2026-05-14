@@ -33,7 +33,6 @@ def test_update_commit_message_no_modification(mock_branch_name, msg, tmpdir):
 @pytest.mark.parametrize('test_data', (
     ('JIRA-1234', 'JIRA-1234'),
     ('JIRA-1234_bar', 'JIRA-1234'),
-    ('jira-1234', 'Jira-1234'),
     ('foo-JIRA-1234_bar', 'foo-JIRA-1234'),
     ('foo/JIRA-1234-bar', 'foo/JIRA-1234-bar'),
     ('foo_JIRA-1234_bar', 'foo'),
@@ -140,13 +139,13 @@ def test_update_commit_message_conventionalcommits(mock_branch_name, tmpdir):
 
 @mock.patch(TESTING_MODULE + '.get_branch_name')
 def test_update_commit_message_capitalize(mock_branch_name, tmpdir):
-    mock_branch_name.return_value = "JIRA-1234_new_feature"
+    mock_branch_name.return_value = "jira-1234_new_feature"
     path = tmpdir.join('file.txt')
-    path.write("test commit message")
-    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
+    path.write("Test commit message")
+    update_commit_message(six.text_type(path), r'[a-zA-Z]+-\d+',
                           'regex_match', '{ticket}: {commit_msg}',
                           capitalize=True)
-    assert path.read() == "JIRA-1234: Test commit message\n"
+    assert path.read() == "Jira-1234: Test commit message\n"
 
 
 @mock.patch(TESTING_MODULE + '.get_branch_name')

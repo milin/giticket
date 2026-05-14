@@ -52,12 +52,12 @@ def update_commit_message(filename, regex, mode, format_string, conventionalcomm
                     type=type, scope=scope, subject=subject
                 )
             else:
-                if capitalize:
-                    commit_msg = capitalize_first(commit_msg)
                 new_commit_msg = format_string.format(
                     ticket=tickets[0], tickets=', '.join(tickets),
                     commit_msg=commit_msg
                 )
+                if capitalize:
+                    new_commit_msg = capitalize_first(new_commit_msg)
 
             contents[0] = six.text_type(new_commit_msg + "\n")
             fd.seek(0)
