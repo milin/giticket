@@ -33,6 +33,7 @@ def test_update_commit_message_no_modification(mock_branch_name, msg, tmpdir):
 @pytest.mark.parametrize('test_data', (
     ('JIRA-1234', 'JIRA-1234'),
     ('JIRA-1234_bar', 'JIRA-1234'),
+    ('jira-1234', 'Jira-1234'),
     ('foo-JIRA-1234_bar', 'foo-JIRA-1234'),
     ('foo/JIRA-1234-bar', 'foo/JIRA-1234-bar'),
     ('foo_JIRA-1234_bar', 'foo'),
@@ -124,6 +125,7 @@ def test_ci_message_with_nl_regex_match_mode(mock_branch_name, msg, tmpdir):
                           'regex_match', '{commit_msg} - {ticket}')
     assert path.read().split('\n')[0] == "{first_line} - {ticket}".format(first_line=first_line, ticket="JIRA-239")
 
+
 # create a unit test to verify that if the --conventionalcommits flag is set,
 # the commit message is updated according to the conventional commit format
 @mock.patch(TESTING_MODULE + '.get_branch_name')
@@ -134,6 +136,7 @@ def test_update_commit_message_conventionalcommits(mock_branch_name, tmpdir):
     update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
                           'regex_match', '{commit_msg}', conventionalcommits=True)
     assert path.read() == "feat(JIRA-5678): add new feature\n"
+
 
 @mock.patch(TESTING_MODULE + '.get_branch_name')
 def test_update_commit_message_capitalize(mock_branch_name, tmpdir):
