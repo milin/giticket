@@ -288,3 +288,19 @@ def test_main(mock_update_commit_message, mock_argparse):
                                                        True,
                                                        0,
                                                        False)
+
+
+@mock.patch(TESTING_MODULE + '.update_commit_message')
+def test_main_to_trailer_only_is_allowed(mock_update_commit_message):
+    main(['foo.txt', '--to_trailer'])
+    mock_update_commit_message.assert_called_once_with('foo.txt', r'[A-Z]+-\d+',
+                                                       'underscore_split',
+                                                       '{ticket} {commit_msg}',
+                                                       False,
+                                                       0,
+                                                       True)
+
+
+def test_main_errors_without_format_or_conventionalcommits_or_to_trailer():
+    with pytest.raises(SystemExit):
+        main(['foo.txt'])
