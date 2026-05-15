@@ -105,8 +105,8 @@ def main(argv=None):
                         default=underscore_split_mode,
                         choices=[underscore_split_mode, regex_match_mode])
     args = parser.parse_args(argv)
-    if not args.conventionalcommits and not args.format:
-        parser.error('You must provide --format if not using --conventionalcommits')
+    if not args.conventionalcommits and not args.format and not args.to_trailer:
+        parser.error('You must provide --format if not using --conventionalcommits and not --to_trailer')
         return 1
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
