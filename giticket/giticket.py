@@ -19,7 +19,7 @@ def capitalize(text, capitalize_spaces):
     return text[:capitalize_spaces].upper() + text[capitalize_spaces:] if text else text
 
 
-def update_commit_message(filename, regex, mode, format_string, conventionalcommits=False, capitalize_spaces=0):
+def update_commit_message(filename, regex, mode, format_string, conventionalcommits=False, capitalize_spaces=0, to_trailer=False):
     with io.open(filename, 'r+') as fd:
         contents = fd.readlines()
         commit_msg = contents[0].rstrip('\r\n')
@@ -35,6 +35,18 @@ def update_commit_message(filename, regex, mode, format_string, conventionalcomm
             if mode == underscore_split_mode:
                 tickets = [branch.split(six.text_type('_'))[0]]
             tickets = [t.strip() for t in tickets]
+
+            if to_trailer:
+                trailer = 'Refs: {tickets}\n'.format(tickets=', '.join(tickets))
+                if contents and not contents[-1].endswith('\n'):
+                    contents[-1] += '\n'
+                if not contents or contents[-1].strip() != '':
+                    contents.append('\n')
+                contents.append(trailer)
+                fd.seek(0)
+                fd.writelines(contents)
+                fd.truncate()
+                return
 
             if conventionalcommits and (match := re.match(conventionalcommit_regex, commit_msg)):
                 # If the commit message matches the Conventional Commits spec, we can use the captured groups.
@@ -86,6 +98,7 @@ def main(argv=None):
     parser.add_argument('filenames', nargs='+')
     parser.add_argument('--conventionalcommits', action='store_true')
     parser.add_argument('--capitalize', nargs='?', const=1, type=int, default=0)
+    parser.add_argument('--to_trailer', action='store_true')
     parser.add_argument('--regex')
     parser.add_argument('--format', nargs='?')
     parser.add_argument('--mode', nargs='?', const=underscore_split_mode,
@@ -97,7 +110,7 @@ def main(argv=None):
         return 1
     regex = args.regex or r'[A-Z]+-\d+'  # noqa
     format_string = args.format or '{ticket} {commit_msg}' # noqa
-    update_commit_message(args.filenames[0], regex, args.mode, format_string, args.conventionalcommits, args.capitalize)
+    update_commit_message(args.filenames[0], regex, args.mode, format_string, args.conventionalcommits, args.capitalize, args.to_trailer)
 
 
 if __name__ == '__main__':
