@@ -215,6 +215,17 @@ def test_update_commit_message_to_trailer_multiple_tickets(mock_branch_name, tmp
 
 
 @mock.patch(TESTING_MODULE + '.get_branch_name')
+def test_update_commit_message_to_trailer_custom_token(mock_branch_name, tmpdir):
+    mock_branch_name.return_value = "JIRA-1234_new_feature"
+    path = tmpdir.join('file.txt')
+    path.write("Subject line")
+    update_commit_message(six.text_type(path), r'[A-Z]+-\d+',
+                          'regex_match', '{ticket}: {commit_msg}',
+                          to_trailer=True, trailer_token='Fixes')
+    assert path.read() == "Subject line\n\nFixes: JIRA-1234\n"
+
+
+@mock.patch(TESTING_MODULE + '.get_branch_name')
 def test_update_commit_message_capitalize_disabled_by_default(mock_branch_name, tmpdir):
     mock_branch_name.return_value = "JIRA-1234_new_feature"
     path = tmpdir.join('file.txt')
@@ -280,6 +291,7 @@ def test_main(mock_update_commit_message, mock_argparse):
     mock_args.conventionalcommits = True
     mock_args.capitalize = 0
     mock_args.to_trailer = False
+    mock_args.trailer_token = 'Refs'
     mock_argparse.ArgumentParser.return_value.parse_args.return_value = mock_args
     main()
     mock_update_commit_message.assert_called_once_with('foo.txt', r'[A-Z]+-\d+',
@@ -287,7 +299,8 @@ def test_main(mock_update_commit_message, mock_argparse):
                                                        '{ticket} {commit_msg}',
                                                        True,
                                                        0,
-                                                       False)
+                                                       False,
+                                                       'Refs')
 
 
 @mock.patch(TESTING_MODULE + '.update_commit_message')
@@ -298,7 +311,8 @@ def test_main_to_trailer_only_is_allowed(mock_update_commit_message):
                                                        '{ticket} {commit_msg}',
                                                        False,
                                                        0,
-                                                       True)
+                                                       True,
+                                                       'Refs')
 
 
 def test_main_errors_without_format_or_conventionalcommits_or_to_trailer():
