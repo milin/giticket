@@ -43,16 +43,37 @@ By default it's ``'{ticket} {commit_msg}``, where ``ticket`` is replaced with th
 Pass ``--mode=`` or update ``args: [--mode=regex_match]`` in your .yaml file to extract ticket by the regex rather than relying on branch name convention.
 With this mode you can also make use of ``{tickets}`` placeholder in ``format`` argument value to put multiple comma-separated tickets in the commit message in case your branch contains more than one ticket.
 
+Pass ``--capitalize`` or ``--capitalize=N`` to capitalize the first ``N`` characters of the resulting commit message. When passed without a value, defaults to capitalizing the first character (``--capitalize=1``).
+
+Pass ``--to_trailer`` to append the ticket(s) as a `git trailer <https://git-scm.com/docs/git-interpret-trailers>`_ at the bottom of the commit message instead of modifying the subject line. For example, committing on branch ``JIRA-1234_awesome_feature`` will append::
+
+    Refs: JIRA-1234
+
+Pass ``--trailer_token=`` to customise the trailer key written by ``--to_trailer``. Defaults to ``Refs``. For example, ``--trailer_token=Fixes`` produces::
+
+    Fixes: JIRA-1234
+
 It is best used along with pre-commit_. You can use it along with pre-commit by adding the following hook in your ``.pre-commit-config.yaml`` file.
 
 ::
 
     repos:
     - repo:  https://github.com/milin/giticket
-      rev: v1.4
+      rev: v1.92
       hooks:
       - id:  giticket
         args: ['--regex=PROJ-[0-9]', '--format={ticket} {commit_msg}']  # Optional
+
+Alternatively, to append tickets as a trailer instead of modifying the subject line:
+
+::
+
+    repos:
+    - repo:  https://github.com/milin/giticket
+      rev: v1.92
+      hooks:
+      - id:  giticket
+        args: ['--to_trailer', '--trailer_token=Refs']  # --trailer_token is optional, defaults to Refs
 
 
 You need to have precommit setup to use this hook.
